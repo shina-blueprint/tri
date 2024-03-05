@@ -7,6 +7,7 @@
 This Go module provides some functions that serve as alternatives to the ternary operator.
 
 Each function evaluates a condition and, based on the result, performs one of several actions.
+
 It can return one of two values, execute an argument-less function for deferred execution, or execute a function that can potentially return an error.
 
 ## Installation
