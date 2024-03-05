@@ -4,9 +4,10 @@
 
 ## Overview
 
-This Go module provides four functions that serve as alternatives to the ternary operator.
+This Go module provides some functions that serve as alternatives to the ternary operator.
 
-Each function evaluates a condition and returns one of two values or executes an argument-less function (for deferred execution).
+Each function evaluates a condition and, based on the result, performs one of several actions.
+It can return one of two values, execute an argument-less function for deferred execution, or execute a function that can potentially return an error.
 
 ## Installation
 
@@ -19,27 +20,33 @@ go get github.com/shina-blueprint/tri
 ```go
 package main
 
-import "github.com/shina-blueprint/tri"
+import (
+    "errors"
+
+    "github.com/shina-blueprint/tri"
+)
 
 func main() {
     // a = "true value"
     a := tri.If(true, "true value", "false value")
+
     // b = "false value"
     b := tri.If(false, "true value", "false value")
 
     // c = "true func"
     c := tri.IfExec(true, func() string { return "true func" }, func() string { return "false func" })
-    // d = "false func"
-    d := tri.IfExec(false, func() string { return "true func" }, func() string { return "false func" })
 
-    // e = "true func"
-    e := tri.IfExecOrVal(true, func() string { return "true func" }, "false value")
-    // f = "false value"
-    f := tri.IfExecOrVal(false, func() string { return "true func" }, "false value")
+    // d = "true func", nil
+    d, err := tri.IfExecWithErr(true, func() (string, error) { return "true func", nil }, func() (string, error) { return "false func", nil })
+        if err != nil {
+        panic(err)
+    }
 
-    // g = "true value"
-    g := tri.IfValOrExec(true, "true value", func() string { return "false func" })
-    // h = "false func"
-    h := tri.IfValOrExec(false, "true value", func() string { return "false func" })
+// e = "false func", error
+    e, err := tri.IfExecWithErr(false, func() (string, error) { return "true func", nil },
+        func() (string, error) { return "false func", errors.New("an error occurred") })
+    if err != nil {
+        panic(err)
+    }
 }
 ```
