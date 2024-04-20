@@ -39,7 +39,7 @@ func main() {
         func() string { return "true func" },
         func() string { return "false func" })
 
-    // d = "true func",  err = nil
+    // d = "true func", err = nil
     d, err := tri.IfExecWithErr(true,
         func() (string, error) { return "true func", nil },
         func() (string, error) { return "false func", errors.New("an error occurred") })
